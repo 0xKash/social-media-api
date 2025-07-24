@@ -2,22 +2,40 @@ require("dotenv").config();
 
 // imports
 const passport = require("passport");
-const session = require("express-session");
+const LocalStrategy = require("passport-local").Strategy;
 const GithubStrategy = require("passport-github2").Strategy;
+const prisma = require("../db/queries");
+const { validPassword } = require("../lib/utils");
 
-// options of passport strategy
-const options = {
+// setup of GithubStrategy (OAuth)
+const githubOptions = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: process.env.GITHUB_CALLBACK_URL,
 };
 
-const strategy = new GithubStrategy(
-  options,
+const githubStrategy = new GithubStrategy(
+  githubOptions,
   (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
   }
 );
+
+// setup of LocalStrategy
+
+const localStrategy = new LocalStrategy(async (username, password, done) => {
+  try {
+    const user = await prisma.getUserByName(username);
+
+    if (!user) return done(null, false, { message: "Incorrect username" });
+    if (!validPassword(password, user.hash, user.salt))
+      return done(null, false, { message: "Incorrect password" });
+
+    return done(null, user);
+  } catch (err) {
+    return done(err);
+  }
+});
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -29,5 +47,6 @@ passport.deserializeUser((user, done) => {
 
 // exports
 module.exports = (passport) => {
-  passport.use(strategy);
+  passport.use("github-strat", githubStrategy);
+  passport.use("local-strat", localStrategy);
 };
