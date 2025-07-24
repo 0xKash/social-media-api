@@ -1,7 +1,10 @@
 // imports
 const { Router } = require("express");
 const passport = require("passport");
-const { registerUser } = require("../controllers/authController");
+const {
+  registerUser,
+  registerGithubUser,
+} = require("../controllers/authController");
 
 // setup
 const authRouter = Router();
@@ -29,8 +32,12 @@ authRouter.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect: "/",
+    successRedirect: "success",
   })
+);
+
+authRouter.get("/github/success", registerGithubUser, (req, res) =>
+  res.redirect("/")
 );
 
 // logout endpoint

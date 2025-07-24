@@ -6,8 +6,7 @@ const prisma = require("../db/queries");
 exports.registerUser = async (req, res) => {
   const { username, password, confirm_password } = req.body;
 
-  if (password != confirm_password)
-    return console.error("passwords don't coincide");
+  if (password != confirm_password) return res.send("Passwords don't coincide");
 
   const saltHash = utils.genPassword(password);
   const { salt, hash } = saltHash;
@@ -18,4 +17,16 @@ exports.registerUser = async (req, res) => {
     status: "success",
     user: user,
   });
+};
+
+exports.registerGithubUser = async (req, res, next) => {
+  const { id, username } = req.user;
+  const avatar = req.user.photos[0].value;
+
+  const value = await prisma.getUserByUsername(username);
+
+  if (value != null) return next(); // Alredy registered
+
+  await prisma.createGithubUser(id, username, avatar);
+  next();
 };

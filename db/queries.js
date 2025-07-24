@@ -22,6 +22,22 @@ exports.createUser = async (username, hash, salt) => {
   }
 };
 
+exports.createGithubUser = async (githubId, username, avatar) => {
+  try {
+    return await prisma.user.create({
+      data: {
+        github_id: Number(githubId),
+        username: username,
+        avatar: avatar,
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      // HANDLE PRISMA ERROR
+    }
+  }
+};
+
 exports.getUserByUsername = async (username) => {
   try {
     return await prisma.user.findUnique({
