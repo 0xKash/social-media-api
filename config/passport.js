@@ -25,7 +25,7 @@ const githubStrategy = new GithubStrategy(
 
 const localStrategy = new LocalStrategy(async (username, password, done) => {
   try {
-    const user = await prisma.getUserByName(username);
+    const user = await prisma.getUserByUsername(username);
 
     if (!user) return done(null, false, { message: "Incorrect username" });
     if (!validPassword(password, user.hash, user.salt))
@@ -47,6 +47,6 @@ passport.deserializeUser((user, done) => {
 
 // exports
 module.exports = (passport) => {
-  passport.use("github-strat", githubStrategy);
-  passport.use("local-strat", localStrategy);
+  passport.use("github", githubStrategy);
+  passport.use("local", localStrategy);
 };
