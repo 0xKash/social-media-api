@@ -6,6 +6,7 @@ const cors = require("cors");
 const authRouter = require("./routes/authRoutes");
 const passport = require("passport");
 const session = require("express-session");
+const { isAuth } = require("./lib/authMiddleware");
 
 require("./config/passport")(passport);
 
@@ -27,15 +28,10 @@ app.use(passport.session());
 
 // Routers
 app.use("/auth", authRouter);
-
-app.get("/", (req, res) => res.send(`You are ${req.user.username}`));
-app.get("/test", (req, res) => {
-  if (req.user) {
-    res.send(`You are still auth ${req.user.username}`);
-  } else {
-    res.send("Auth is missing");
-  }
-});
+app.get("/", isAuth, (req, res) => res.json(req.user));
+app.get("/test", isAuth, (req, res) =>
+  res.send(`Yes, you are ${req.user.username}`)
+);
 
 // errrorHandler
 app.use((err, req, res, next) => {
