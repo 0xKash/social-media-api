@@ -1,12 +1,19 @@
 // imports
 const utils = require("../lib/utils");
 const prisma = require("../db/queries");
+const { CustomBadRequestError } = require("../errors/errors");
 
 // This function checks if user's input is valid, creates a new user on db & issues a new JWT token
 exports.registerUser = async (req, res) => {
   const { username, password, confirm_password } = req.body;
 
-  if (password != confirm_password) return res.send("Passwords don't coincide");
+  if (password != confirm_password)
+    throw new CustomBadRequestError(
+      "Passwords don't match",
+      "password and confirm_password don't have same value",
+      "Make sure both are correctly written",
+      req.originalUrl
+    );
 
   const saltHash = utils.genPassword(password);
   const { salt, hash } = saltHash;
