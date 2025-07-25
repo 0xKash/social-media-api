@@ -15,7 +15,7 @@ exports.registerUser = async (req, res) => {
 
   res.json({
     status: "success",
-    user: user,
+    data: user,
   });
 };
 
