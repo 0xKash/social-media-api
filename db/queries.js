@@ -1,5 +1,6 @@
 // imports
 const { PrismaClient, Prisma } = require("@prisma/client");
+const handlePrismaError = require("../errors/handlePrismaError");
 
 // prismaClient setup
 const prisma = new PrismaClient();
@@ -17,7 +18,7 @@ exports.createUser = async (username, hash, salt) => {
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      // HANDLE PRISMA ERROR
+      handlePrismaError(err);
     }
   }
 };
@@ -33,7 +34,7 @@ exports.createGithubUser = async (githubId, username, avatar) => {
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      // HANDLE PRISMA ERROR
+      handlePrismaError(err);
     }
   }
 };
@@ -47,7 +48,7 @@ exports.getUserByUsername = async (username) => {
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      // HANDLE PRISMA ERROR
+      handlePrismaError(err);
     }
   }
 };
