@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 // post queries
 
-export const getAllPosts = async () => {
+exports.getAllPosts = async () => {
   try {
     return await prisma.post.findMany({
       orderBy: [
@@ -23,7 +23,7 @@ export const getAllPosts = async () => {
   }
 };
 
-export const createPost = async (userId, content) => {
+exports.createPost = async (userId, content) => {
   try {
     return await prisma.post.create({
       data: {
@@ -40,7 +40,7 @@ export const createPost = async (userId, content) => {
   }
 };
 
-export const getPostById = async (postId) => {
+exports.getPostById = async (postId) => {
   try {
     return await prisma.post.findUnique({
       where: {
