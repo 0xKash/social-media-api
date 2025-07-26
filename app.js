@@ -14,7 +14,12 @@ require("./config/passport")(passport);
 // app setup
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.ORIGIN_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.set(express.urlencoded({ extended: true }));
 app.use(

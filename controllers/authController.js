@@ -37,3 +37,18 @@ exports.registerGithubUser = async (req, res, next) => {
   await prisma.createGithubUser(id, username, avatar);
   next();
 };
+
+exports.successLogin = async (req, res) => {
+  return res.json({
+    status: "success",
+    data: {
+      session: req.session,
+    },
+  });
+};
+
+exports.failLogin = async (req, res) => {
+  return res.json({
+    status: "error",
+  });
+};

@@ -1,10 +1,14 @@
 // imports
 const { Router } = require("express");
 const passport = require("passport");
+
 const {
   registerUser,
   registerGithubUser,
+  successLogin,
+  failLogin,
 } = require("../controllers/authController");
+const { isAuth } = require("../lib/authMiddleware");
 
 // setup
 const authRouter = Router();
@@ -18,10 +22,13 @@ authRouter.get("/login", (req, res) => res.send("Please log in"));
 authRouter.post(
   "/login",
   passport.authenticate("local", {
-    failureRedirect: "auth/register",
-    successRedirect: "/test",
+    failureRedirect: "/auth/login/fail",
+    successRedirect: "/auth/login/success",
   })
 );
+
+authRouter.get("/login/success", isAuth, successLogin);
+authRouter.get("/login/fail", failLogin);
 
 // github endpoints (OAuth)
 authRouter.get(
@@ -32,7 +39,7 @@ authRouter.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect: "success",
+    successRedirect: `${process.env.ORIGIN_URL}/home`,
   })
 );
 
