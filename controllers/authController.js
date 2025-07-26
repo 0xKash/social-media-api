@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
 
   const user = await prisma.createUser(username, hash, salt);
 
-  res.json({
+  return res.json({
     status: "success",
     data: user,
   });
