@@ -1,6 +1,6 @@
 // imports
 const utils = require("../lib/utils");
-const prisma = require("../db/queries");
+const prisma = require("../db/user");
 const { CustomBadRequestError } = require("../errors/errors");
 
 // This function checks if user's input is valid, creates a new user on db & issues a new JWT token
