@@ -14,4 +14,13 @@ model User {
     hash        String?
     salt        String?
     avatar      String?  @default("default-avatar")
+    posts       Post[]
+}
+
+model Post {
+    id          Int       @id @default(autoincrement())
+    author      User      @relation(fields: [authorId], references: [id])
+    authorId    Int
+    content     String    
+    createdAt   DateTime    @default(now()) @db.Timestamptz(0)
 }
