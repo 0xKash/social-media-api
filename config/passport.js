@@ -4,7 +4,7 @@ require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GithubStrategy = require("passport-github2").Strategy;
-const prisma = require("../db/queries");
+const prisma = require("../db/user");
 const { validPassword } = require("../lib/utils");
 
 // setup of GithubStrategy (OAuth)
