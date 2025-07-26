@@ -8,6 +8,7 @@ const passport = require("passport");
 const session = require("express-session");
 const { isAuth } = require("./lib/authMiddleware");
 const { test } = require("./controllers/authController");
+const postRouter = require("./routes/postRoutes");
 
 require("./config/passport")(passport);
 
@@ -34,7 +35,7 @@ app.use(passport.session());
 
 // Routers
 app.use("/auth", authRouter);
-app.get("/", isAuth, (req, res) => res.json(req.user));
+app.use("/posts", postRouter);
 
 // errrorHandler
 app.use((err, req, res, next) => {

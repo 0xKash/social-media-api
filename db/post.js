@@ -3,7 +3,10 @@ const { PrismaClient, Prisma } = require("@prisma/client");
 const handlePrismaError = require("../errors/handlePrismaError");
 
 // prismaClient setup
-const prisma = new PrismaClient();
+const omitConfig = {
+  user: { hash: true, salt: true },
+};
+const prisma = new PrismaClient({ omit: omitConfig });
 
 // post queries
 
@@ -15,6 +18,9 @@ exports.getAllPosts = async () => {
           createdAt: "desc",
         },
       ],
+      include: {
+        author: true,
+      },
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -28,7 +34,7 @@ exports.createPost = async (userId, content) => {
     return await prisma.post.create({
       data: {
         content: content,
-        user: {
+        author: {
           connect: { id: Number(userId) },
         },
       },
@@ -47,7 +53,7 @@ exports.getPostById = async (postId) => {
         id: Number(postId),
       },
       include: {
-        user: true,
+        author: true,
       },
     });
   } catch (err) {

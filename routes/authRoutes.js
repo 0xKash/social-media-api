@@ -14,11 +14,9 @@ const { isAuth } = require("../lib/authMiddleware");
 const authRouter = Router();
 
 // register endpoints
-authRouter.get("/register", (req, res) => res.send("register"));
 authRouter.post("/register", registerUser);
 
 // login endpoints
-authRouter.get("/login", (req, res) => res.send("Please log in"));
 authRouter.post(
   "/login",
   passport.authenticate("local", {
