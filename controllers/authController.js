@@ -3,6 +3,22 @@ const utils = require("../lib/utils");
 const prisma = require("../db/user");
 const { CustomBadRequestError } = require("../errors/errors");
 
+exports.authUser = async (req, res) => {
+  if (req.user) {
+    return res.json({
+      status: "success",
+      data: req.user,
+    });
+  } else {
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${content} is missing or isn't valid`,
+      "Make sure content is correctly written",
+      req.originalUrl
+    );
+  }
+};
+
 // This function checks if user's input is valid, creates a new user on db & issues a new JWT token
 exports.registerUser = async (req, res) => {
   const { username, password, confirm_password } = req.body;

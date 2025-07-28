@@ -7,11 +7,15 @@ const {
   registerGithubUser,
   successLogin,
   failLogin,
+  authUser,
 } = require("../controllers/authController");
 const { isAuth } = require("../lib/authMiddleware");
 
 // setup
 const authRouter = Router();
+
+// get user data
+authRouter.get("/", isAuth, authUser);
 
 // register endpoints
 authRouter.post("/register", registerUser);
