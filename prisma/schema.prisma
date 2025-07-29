@@ -8,18 +8,30 @@ datasource db {
 }
 
 model User {
-    id          Int      @id @default(autoincrement())
-    github_id   Int?     @unique
-    username    String   @unique
+    id          Int         @id @default(autoincrement())
+    github_id   Int?        @unique
+    username    String      @unique
     hash        String?
     salt        String?
-    avatar      String?  @default("default-avatar")
+    avatar      String?     @default("default-avatar")
     posts       Post[]
+    joinedAt    DateTime    @default(now()) @db.Date
+    followedBy  Follows[]   @relation("followedBy")
+    following   Follows[]   @relation("following")
+}
+
+model Follows {
+  followedBy    User        @relation("followedBy", fields: [followedById], references: [id])
+  followedById  Int
+  following     User        @relation("following", fields: [followingId], references: [id])
+  followingId   Int
+
+  @@id([followingId, followedById])
 }
 
 model Post {
-    id          Int       @id @default(autoincrement())
-    author      User      @relation(fields: [authorId], references: [id])
+    id          Int         @id @default(autoincrement())
+    author      User        @relation(fields: [authorId], references: [id])
     authorId    Int
     content     String    
     createdAt   DateTime    @default(now()) @db.Timestamptz(0)
