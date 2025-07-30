@@ -16,18 +16,11 @@ model User {
     avatar      String?     @default("default-avatar")
     posts       Post[]
     joinedAt    DateTime    @default(now()) @db.Date
-    followedBy  Follows[]   @relation("followedBy")
-    following   Follows[]   @relation("following")
+    followedBy  User[]  @relation("UserFollows")
+    following   User[]  @relation("UserFollows")
 }
 
-model Follows {
-  followedBy    User        @relation("followedBy", fields: [followedById], references: [id])
-  followedById  Int
-  following     User        @relation("following", fields: [followingId], references: [id])
-  followingId   Int
 
-  @@id([followingId, followedById])
-}
 
 model Post {
     id          Int         @id @default(autoincrement())
