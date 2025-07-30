@@ -21,6 +21,23 @@ exports.followUser = async (req, res) => {
   });
 };
 
+exports.unfollowUser = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const unfollow = await prisma.unfollowUser(req.user.id, req.params.targetId);
+
+  return res.json({
+    status: "success",
+    data: unfollow,
+  });
+};
+
 exports.getUsers = async (req, res) => {
   if (!req.user)
     throw new CustomNotAuthorizedError(

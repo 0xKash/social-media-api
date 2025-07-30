@@ -54,22 +54,47 @@ exports.getUserByUsername = async (username) => {
 };
 
 exports.followUser = async (userId, targetId) => {
-  try {
-    return await prisma.follows.create({
-      data: {
-        followedBy: {
-          connect: { id: Number(userId) },
-        },
-        following: {
-          connect: { id: Number(targetId) },
-        },
+  const user = await prisma.user.update({
+    where: { id: Number(userId) },
+    data: {
+      following: {
+        connect: [{ id: Number(targetId) }],
       },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      handlePrismaError(err);
-    }
-  }
+    },
+  });
+
+  const target = await prisma.user.update({
+    where: { id: Number(targetId) },
+    data: {
+      followedBy: {
+        connect: [{ id: Number(userId) }],
+      },
+    },
+  });
+
+  return { user, target };
+};
+
+exports.unfollowUser = async (userId, targetId) => {
+  const user = await prisma.user.update({
+    where: { id: Number(userId) },
+    data: {
+      following: {
+        disconnect: [{ id: Number(targetId) }],
+      },
+    },
+  });
+
+  const target = await prisma.user.update({
+    where: { id: Number(userId) },
+    data: {
+      followedBy: {
+        disconnect: [{ id: Number(targetId) }],
+      },
+    },
+  });
+
+  return { user, target };
 };
 
 exports.getUsers = async (limit, userId) => {
