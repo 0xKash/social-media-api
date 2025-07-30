@@ -66,7 +66,18 @@ exports.followUser = async (userId, targetId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
+exports.getUsers = async (limit) => {
+  try {
+    return await prisma.user.findMany({
+      take: Number(limit),
+    });
+  } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       handlePrismaError(err);
     }
