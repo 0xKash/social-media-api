@@ -52,3 +52,23 @@ exports.getUserByUsername = async (username) => {
     }
   }
 };
+
+exports.followUser = async (userId, targetId) => {
+  try {
+    return await prisma.follows.create({
+      data: {
+        followedBy: {
+          connect: { id: Number(userId) },
+        },
+        following: {
+          connect: { id: Number(targetId) },
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};

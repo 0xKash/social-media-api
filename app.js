@@ -9,6 +9,7 @@ const session = require("express-session");
 const { isAuth } = require("./lib/authMiddleware");
 const { test } = require("./controllers/authController");
 const postRouter = require("./routes/postRoutes");
+const userRouter = require("./routes/userRouter");
 
 require("./config/passport")(passport);
 
@@ -35,6 +36,7 @@ app.use(passport.session());
 
 // Routers
 app.use("/auth", authRouter);
+app.use("/users", userRouter);
 app.use("/posts", postRouter);
 
 // errrorHandler
