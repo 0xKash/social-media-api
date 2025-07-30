@@ -54,55 +54,66 @@ exports.getUserByUsername = async (username) => {
 };
 
 exports.followUser = async (userId, targetId) => {
-  const user = await prisma.user.update({
-    where: { id: Number(userId) },
-    data: {
-      following: {
-        connect: [{ id: Number(targetId) }],
+  try {
+    const user = await prisma.user.update({
+      where: { id: Number(userId) },
+      data: {
+        following: {
+          connect: [{ id: Number(targetId) }],
+        },
       },
-    },
-  });
+    });
 
-  const target = await prisma.user.update({
-    where: { id: Number(targetId) },
-    data: {
-      followedBy: {
-        connect: [{ id: Number(userId) }],
+    const target = await prisma.user.update({
+      where: { id: Number(targetId) },
+      data: {
+        followedBy: {
+          connect: [{ id: Number(userId) }],
+        },
       },
-    },
-  });
+    });
 
-  return { user, target };
+    return { user, target };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
 };
 
 exports.unfollowUser = async (userId, targetId) => {
-  const user = await prisma.user.update({
-    where: { id: Number(userId) },
-    data: {
-      following: {
-        disconnect: [{ id: Number(targetId) }],
+  try {
+    const user = await prisma.user.update({
+      where: { id: Number(userId) },
+      data: {
+        following: {
+          disconnect: [{ id: Number(targetId) }],
+        },
       },
-    },
-  });
+    });
 
-  const target = await prisma.user.update({
-    where: { id: Number(userId) },
-    data: {
-      followedBy: {
-        disconnect: [{ id: Number(targetId) }],
+    const target = await prisma.user.update({
+      where: { id: Number(targetId) },
+      data: {
+        followedBy: {
+          disconnect: [{ id: Number(userId) }],
+        },
       },
-    },
-  });
+    });
 
-  return { user, target };
+    return { user, target };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
 };
 
-exports.getUsers = async (limit, userId) => {
+exports.getNotFollowingUsers = async (limit, userId) => {
   try {
     return await prisma.user.findMany({
       take: Number(limit),
       where: {
-        // Excluye al propio usuario
         NOT: [
           {
             id: Number(userId),
@@ -110,19 +121,14 @@ exports.getUsers = async (limit, userId) => {
           {
             followedBy: {
               some: {
-                followedById: Number(userId),
+                id: Number(userId),
               },
             },
           },
         ],
       },
-      include: {
-        followedBy: true,
-        following: true,
-      },
     });
   } catch (err) {
-    console.error(err);
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       handlePrismaError(err);
     }

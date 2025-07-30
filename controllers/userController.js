@@ -55,7 +55,7 @@ exports.getUsers = async (req, res) => {
       req.originalUrl
     );
 
-  const users = await prisma.getUsers(req.query.limit, req.user.id);
+  const users = await prisma.getNotFollowingUsers(req.query.limit, req.user.id);
 
   return res.json({
     status: "success",
