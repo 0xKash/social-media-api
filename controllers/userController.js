@@ -38,7 +38,7 @@ exports.getUsers = async (req, res) => {
       req.originalUrl
     );
 
-  const users = await prisma.getUsers(req.query.limit);
+  const users = await prisma.getUsers(req.query.limit, req.user.id);
 
   return res.json({
     status: "success",

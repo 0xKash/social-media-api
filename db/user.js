@@ -72,12 +72,32 @@ exports.followUser = async (userId, targetId) => {
   }
 };
 
-exports.getUsers = async (limit) => {
+exports.getUsers = async (limit, userId) => {
   try {
     return await prisma.user.findMany({
       take: Number(limit),
+      where: {
+        // Excluye al propio usuario
+        NOT: [
+          {
+            id: Number(userId),
+          },
+          {
+            followedBy: {
+              some: {
+                followedById: Number(userId),
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        followedBy: true,
+        following: true,
+      },
     });
   } catch (err) {
+    console.error(err);
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       handlePrismaError(err);
     }
