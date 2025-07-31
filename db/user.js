@@ -53,6 +53,20 @@ exports.getUserByUsername = async (username) => {
   }
 };
 
+exports.getUserByGithubId = async (githubId) => {
+  try {
+    return await prisma.user.findUnique({
+      where: {
+        github_id: Number(githubId),
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
 exports.followUser = async (userId, targetId) => {
   try {
     const user = await prisma.user.update({
