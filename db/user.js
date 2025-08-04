@@ -141,6 +141,9 @@ exports.getNotFollowingUsers = async (limit, userId) => {
           },
         ],
       },
+      include: {
+        followedBy: true,
+      },
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
