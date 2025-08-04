@@ -49,7 +49,6 @@ passport.deserializeUser(async (user, done) => {
 
     if (githubUser) {
       user.id = githubUser.id;
-      console.log(user);
     }
   }
 
