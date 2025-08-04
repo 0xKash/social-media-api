@@ -31,8 +31,8 @@ app.use(
     resave: false,
   })
 );
-app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.initialize());
 
 // Routers
 app.use("/auth", authRouter);

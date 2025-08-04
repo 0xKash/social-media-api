@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const GithubStrategy = require("passport-github2").Strategy;
 const prisma = require("../db/user");
 const { validPassword } = require("../lib/utils");
+const { changeGithubUserId } = require("../lib/authMiddleware");
 
 // setup of GithubStrategy (OAuth)
 const githubOptions = {
@@ -43,10 +44,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
   // If user signs in with github, the id stored in db is applied to req.user.id
-  if (user.nodeId) {
-    const githubUser = await prisma.getUserByGithubId(user.id);
-    user.id = githubUser.id;
-  }
+  changeGithubUserId(user);
 
   done(null, user);
 });
