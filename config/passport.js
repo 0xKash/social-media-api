@@ -44,7 +44,14 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
   // If user signs in with github, the id stored in db is applied to req.user.id
-  changeGithubUserId(user);
+  if (user.nodeId) {
+    const githubUser = await prisma.getUserByGithubId(user.id);
+
+    if (githubUser) {
+      user.id = githubUser.id;
+      console.log(user);
+    }
+  }
 
   done(null, user);
 });
