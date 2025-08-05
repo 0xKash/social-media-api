@@ -16,8 +16,9 @@ model User {
     avatar      String?     @default("default-avatar")
     posts       Post[]
     joinedAt    DateTime    @default(now()) @db.Date
-    followedBy  User[]  @relation("UserFollows")
-    following   User[]  @relation("UserFollows")
+    followedBy  User[]      @relation("UserFollows")
+    following   User[]      @relation("UserFollows")
+    likedPosts  Post[]      @relation("PostLikes")
 }
 
 
@@ -28,4 +29,5 @@ model Post {
     authorId    Int
     content     String    
     createdAt   DateTime    @default(now()) @db.Timestamptz(0)
+    likedBy     User[]      @relation("PostLikes")
 }
