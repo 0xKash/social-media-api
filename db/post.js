@@ -19,7 +19,11 @@ exports.getAllPosts = async () => {
         },
       ],
       include: {
-        author: true,
+        author: {
+          include: {
+            followedBy: true,
+          },
+        },
       },
     });
   } catch (err) {
