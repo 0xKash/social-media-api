@@ -24,6 +24,12 @@ exports.getAllPosts = async () => {
             followedBy: true,
           },
         },
+        likedBy: true,
+        _count: {
+          select: {
+            likedBy: true,
+          },
+        },
       },
     });
   } catch (err) {
@@ -58,6 +64,12 @@ exports.getPostById = async (postId) => {
       },
       include: {
         author: true,
+        likedBy: true,
+        _count: {
+          select: {
+            likedBy: true,
+          },
+        },
       },
     });
   } catch (err) {
