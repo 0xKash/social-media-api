@@ -59,3 +59,37 @@ exports.getPostById = async (req, res) => {
     data: post,
   });
 };
+
+exports.likePost = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const post = await prisma.likePost(req.params.postId, req.user.id);
+
+  return res.json({
+    status: "success",
+    data: post,
+  });
+};
+
+exports.dislikePost = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const post = await prisma.dislikePost(req.params.postId, req.user.id);
+
+  return res.json({
+    status: "success",
+    data: post,
+  });
+};

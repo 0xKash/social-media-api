@@ -5,6 +5,8 @@ const {
   createPost,
   getAllPosts,
   getPostById,
+  likePost,
+  dislikePost,
 } = require("../controllers/postController");
 
 // setup
@@ -15,7 +17,7 @@ postRouter.post("/", isAuth, createPost);
 
 postRouter.get("/:postId", isAuth, getPostById);
 
-postRouter.post("/:postId/like", isAuth);
-postRouter.post("/:postId/dislike", isAuth);
+postRouter.post("/:postId/like", isAuth, likePost);
+postRouter.post("/:postId/dislike", isAuth, dislikePost);
 
 module.exports = postRouter;
