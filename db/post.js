@@ -66,3 +66,67 @@ exports.getPostById = async (postId) => {
     }
   }
 };
+
+exports.likePost = async (postId, userId) => {
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id: Number(postId),
+      },
+      data: {
+        likedBy: {
+          connect: [{ id: Number(userId) }],
+        },
+      },
+    });
+
+    const user = await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        likedPosts: {
+          connect: [{ id: Number(postId) }],
+        },
+      },
+    });
+
+    return { post, user };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
+exports.dislikePost = async (postId, userId) => {
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id: Number(postId),
+      },
+      data: {
+        likedBy: {
+          disconnect: [{ id: Number(userId) }],
+        },
+      },
+    });
+
+    const user = await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        likedPosts: {
+          disconnect: [{ id: Number(postId) }],
+        },
+      },
+    });
+
+    return { post, user };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
