@@ -25,9 +25,11 @@ exports.getAllPosts = async () => {
           },
         },
         likedBy: true,
+        comments: true,
         _count: {
           select: {
             likedBy: true,
+            comments: true,
           },
         },
       },
@@ -65,9 +67,11 @@ exports.getPostById = async (postId) => {
       include: {
         author: true,
         likedBy: true,
+        comments: true,
         _count: {
           select: {
             likedBy: true,
+            comments: true,
           },
         },
       },
