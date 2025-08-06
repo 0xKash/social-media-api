@@ -148,15 +148,16 @@ exports.createComment = async (postId, userId, content) => {
     return await prisma.comment.create({
       data: {
         content: content,
-      },
-      user: {
-        connect: { id: Number(userId) },
-      },
-      post: {
-        connect: { id: Number(postId) },
+        post: {
+          connect: { id: Number(postId) },
+        },
+        author: {
+          connect: { id: Number(userId) },
+        },
       },
     });
   } catch (err) {
+    console.error(err);
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       handlePrismaError(err);
     }
