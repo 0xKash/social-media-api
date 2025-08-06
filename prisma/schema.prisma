@@ -19,9 +19,8 @@ model User {
     followedBy  User[]      @relation("UserFollows")
     following   User[]      @relation("UserFollows")
     likedPosts  Post[]      @relation("PostLikes")
+    comments    Comment[]
 }
-
-
 
 model Post {
     id          Int         @id @default(autoincrement())
@@ -30,4 +29,15 @@ model Post {
     content     String    
     createdAt   DateTime    @default(now()) @db.Timestamptz(0)
     likedBy     User[]      @relation("PostLikes")
+    comments    Comment[]
+}
+
+model Comment {
+    id          Int         @id @default(autoincrement())
+    content     String
+    post        Post        @relation(fields: [postId], references: [id])
+    postId      Int
+    author      User        @relation(fields: [authorId], references: [id])
+    authorId    Int 
+    createdAt   DateTime    @default(now()) @db.Timestamptz(0)   
 }
