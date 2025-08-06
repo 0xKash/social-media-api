@@ -142,3 +142,37 @@ exports.dislikePost = async (postId, userId) => {
     }
   }
 };
+
+exports.createComment = async (postId, userId, content) => {
+  try {
+    return await prisma.comment.create({
+      data: {
+        content: content,
+      },
+      user: {
+        connect: { id: Number(userId) },
+      },
+      post: {
+        connect: { id: Number(postId) },
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
+exports.deleteComment = async (commentId) => {
+  try {
+    return await prisma.comment.delete({
+      where: {
+        id: Number(commentId),
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
