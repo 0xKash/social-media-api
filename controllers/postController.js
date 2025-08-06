@@ -93,3 +93,52 @@ exports.dislikePost = async (req, res) => {
     data: post,
   });
 };
+
+exports.createComment = async (req, res) => {
+  const { user } = req;
+  const { content } = req.body;
+
+  if (!user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  if (!content)
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${content} is missing or isn't valid`,
+      "Make sure content is correctly written",
+      req.originalUrl
+    );
+
+  const comment = await prisma.createComment(
+    req.params.postId,
+    user.id,
+    content
+  );
+
+  res.json({
+    status: "success",
+    data: comment,
+  });
+};
+
+exports.deleteComment = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const comment = await prisma.deleteComment(req.params.commentId);
+
+  res.json({
+    status: "success",
+    data: comment,
+  });
+};

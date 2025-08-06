@@ -8,6 +8,8 @@ const {
   likePost,
   dislikePost,
   getPostLikesCount,
+  createComment,
+  deleteComment,
 } = require("../controllers/postController");
 
 // setup
@@ -20,5 +22,8 @@ postRouter.get("/:postId", isAuth, getPostById);
 
 postRouter.post("/:postId/likes", isAuth, likePost);
 postRouter.delete("/:postId/likes", isAuth, dislikePost);
+
+postRouter.post("/:postId/comments", isAuth, createComment);
+postRouter.delete("/:postId/comments/:commentId", isAuth, deleteComment);
 
 module.exports = postRouter;
