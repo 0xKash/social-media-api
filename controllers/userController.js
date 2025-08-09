@@ -62,3 +62,20 @@ exports.getUsers = async (req, res) => {
     data: users,
   });
 };
+
+exports.getUser = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const user = await prisma.getUserById(req.params.userId);
+
+  return res.json({
+    status: "success",
+    data: user,
+  });
+};
