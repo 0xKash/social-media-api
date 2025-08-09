@@ -65,9 +65,21 @@ exports.getPostById = async (postId) => {
         id: Number(postId),
       },
       include: {
-        author: true,
+        author: {
+          include: {
+            followedBy: true,
+          },
+        },
         likedBy: true,
-        comments: true,
+        comments: {
+          include: {
+            author: {
+              include: {
+                followedBy: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             likedBy: true,
