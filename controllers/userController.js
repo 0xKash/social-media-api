@@ -87,3 +87,28 @@ exports.getUser = async (req, res) => {
     data: user,
   });
 };
+
+exports.getUserByUsername = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  if (!req.params.username)
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${req.params.username} (params.username) is missing or isn't valid`,
+      "Make sure username is correctly written",
+      req.originalUrl
+    );
+
+  const user = await prisma.getUserByUsername(req.params.username);
+
+  return res.json({
+    status: "success",
+    data: user,
+  });
+};

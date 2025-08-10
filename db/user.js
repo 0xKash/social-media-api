@@ -45,6 +45,15 @@ exports.getUserByUsername = async (username) => {
       where: {
         username: username,
       },
+      include: {
+        followedBy: true,
+        _count: {
+          select: {
+            followedBy: true,
+            following: true,
+          },
+        },
+      },
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {

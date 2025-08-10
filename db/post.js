@@ -105,6 +105,29 @@ exports.getPostsByUsername = async (username) => {
           },
         },
       },
+      include: {
+        author: {
+          include: {
+            followedBy: true,
+          },
+        },
+        likedBy: true,
+        comments: {
+          include: {
+            author: {
+              include: {
+                followedBy: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            likedBy: true,
+            comments: true,
+          },
+        },
+      },
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
