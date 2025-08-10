@@ -60,6 +60,24 @@ exports.getPostById = async (req, res) => {
   });
 };
 
+exports.getPostsByUsername = async (req, res) => {
+  if (!req.params.username)
+    // Checks if param is missing
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "username query parameter is missing",
+      "Make sure the param is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const posts = await prisma.getPostsByUsername(req.params.username);
+
+  return await res.json({
+    status: "success",
+    data: posts,
+  });
+};
+
 exports.likePost = async (req, res) => {
   if (!req.user)
     throw new CustomNotAuthorizedError(

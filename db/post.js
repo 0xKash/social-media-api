@@ -95,6 +95,24 @@ exports.getPostById = async (postId) => {
   }
 };
 
+exports.getPostsByUsername = async (username) => {
+  try {
+    return await prisma.post.findMany({
+      where: {
+        author: {
+          is: {
+            username: username,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
 exports.likePost = async (postId, userId) => {
   try {
     const post = await prisma.post.update({

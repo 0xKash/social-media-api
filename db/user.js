@@ -59,8 +59,19 @@ exports.getUserById = async (userId) => {
       where: {
         id: Number(userId),
       },
+      include: {
+        followedBy: true,
+        _count: {
+          select: {
+            followedBy: true,
+            following: true,
+          },
+        },
+      },
     });
   } catch (err) {
+    console.error(err);
+
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       handlePrismaError(err);
     }

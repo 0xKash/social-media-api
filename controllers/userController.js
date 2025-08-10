@@ -72,6 +72,14 @@ exports.getUser = async (req, res) => {
       req.originalUrl
     );
 
+  if (!req.params.userId)
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${req.params.userId} (params.userId) is missing or isn't valid`,
+      "Make sure userId is correctly written",
+      req.originalUrl
+    );
+
   const user = await prisma.getUserById(req.params.userId);
 
   return res.json({
