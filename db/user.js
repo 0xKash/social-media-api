@@ -39,6 +39,40 @@ exports.createGithubUser = async (githubId, username, avatar) => {
   }
 };
 
+exports.updateAvatar = async (avatar, userId) => {
+  try {
+    return await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        avatar: avatar,
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
+exports.updateDescription = async (description, userId) => {
+  try {
+    return await prisma.user.update({
+      where: {
+        id: Number(userId),
+      },
+      data: {
+        description: description,
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
 exports.getUserByUsername = async (username) => {
   try {
     return await prisma.user.findUnique({
