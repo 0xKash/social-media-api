@@ -42,6 +42,31 @@ exports.createPost = async (req, res) => {
   });
 };
 
+exports.deletePost = async (req, res) => {
+  if (!req.params.postId)
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${req.params.postId} (params.postId) is missing or isn't valid`,
+      "Make sure postId is correctly written",
+      req.originalUrl
+    );
+
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const post = await prisma.deletePost(req.params.postId);
+
+  return res.json({
+    status: "success",
+    data: post,
+  });
+};
+
 exports.getPostById = async (req, res) => {
   if (!req.params.postId)
     // Checks if param is missing
