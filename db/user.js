@@ -39,7 +39,7 @@ exports.createGithubUser = async (githubId, username, avatar) => {
   }
 };
 
-exports.updateAvatar = async (avatar, userId) => {
+exports.updateAvatar = async (userId, avatar) => {
   try {
     return await prisma.user.update({
       where: {
