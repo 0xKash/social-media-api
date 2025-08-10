@@ -58,6 +58,20 @@ exports.createPost = async (userId, content) => {
   }
 };
 
+exports.deletePost = async (postId) => {
+  try {
+    return await prisma.post.delete({
+      where: {
+        id: Number(postId),
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
 exports.getPostById = async (postId) => {
   try {
     return await prisma.post.findUnique({
