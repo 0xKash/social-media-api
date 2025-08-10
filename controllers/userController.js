@@ -112,3 +112,31 @@ exports.getUserByUsername = async (req, res) => {
     data: user,
   });
 };
+
+exports.updateDescription = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  if (!req.body.description)
+    throw new CustomBadRequestError(
+      "Necessary input is missing",
+      `${req.body.description} (body.description) is missing or isn't valid`,
+      "Make sure description is correctly written",
+      req.originalUrl
+    );
+
+  const user = await prisma.updateDescription(
+    req.body.description,
+    req.user.id
+  );
+
+  return res.json({
+    status: "success",
+    data: user,
+  });
+};
