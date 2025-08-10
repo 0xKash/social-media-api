@@ -1,7 +1,10 @@
+const { decode } = require("base64-arraybuffer");
 const prisma = require("../db/user");
+const supabase = require("../supabase/supabase");
 const {
   CustomBadRequestError,
   CustomNotAuthorizedError,
+  CustomNotFoundError,
 } = require("../errors/errors");
 
 exports.followUser = async (req, res) => {
@@ -138,5 +141,34 @@ exports.updateDescription = async (req, res) => {
   return res.json({
     status: "success",
     data: user,
+  });
+};
+
+exports.updateAvatar = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  if (!req.file) {
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "File is missing",
+      "Please upload a file",
+      req.originalUrl
+    );
+  }
+
+  const avatarFile = decode(req.file.buffer.toString("base64"));
+
+  const { data } = await supabase.updateAvatar(req.user.id, avatarFile);
+  await prisma.updateAvatar(req.user.id, data.publicUrl);
+
+  res.json({
+    status: "success",
+    data: data.publicUrl,
   });
 };
