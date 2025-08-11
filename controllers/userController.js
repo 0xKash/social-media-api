@@ -4,7 +4,6 @@ const supabase = require("../supabase/supabase");
 const {
   CustomBadRequestError,
   CustomNotAuthorizedError,
-  CustomNotFoundError,
 } = require("../errors/errors");
 
 exports.followUser = async (req, res) => {
@@ -165,10 +164,10 @@ exports.updateAvatar = async (req, res) => {
   const avatarFile = decode(req.file.buffer.toString("base64"));
 
   const { data } = await supabase.updateAvatar(req.user.id, avatarFile);
-  await prisma.updateAvatar(req.user.id, data.publicUrl);
+  const { avatar } = await prisma.updateAvatar(req.user.id, data.publicUrl);
 
   res.json({
     status: "success",
-    data: data.publicUrl,
+    data: avatar,
   });
 };
