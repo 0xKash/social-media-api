@@ -46,7 +46,7 @@ exports.updateAvatar = async (userId, avatar) => {
         id: Number(userId),
       },
       data: {
-        avatar: avatar,
+        avatar: `${avatar}?random=${Math.random()}`,
       },
     });
   } catch (err) {
