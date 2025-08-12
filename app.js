@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ORIGIN_URL,
+    origin: "https://social-media-frontend-seven-umber.vercel.app",
     credentials: true,
   })
 );
