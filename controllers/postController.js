@@ -6,7 +6,41 @@ const {
 } = require("../errors/errors");
 
 exports.getAllPosts = async (req, res) => {
-  const posts = await prisma.getAllPosts();
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  if (req.query.trending === "true") {
+    const posts = await prisma.getAllPosts(true);
+
+    return res.json({
+      status: "success",
+      data: posts,
+    });
+  }
+
+  const posts = await prisma.getAllPosts(false);
+
+  return res.json({
+    status: "success",
+    data: posts,
+  });
+};
+
+exports.getFollowingPosts = async (req, res) => {
+  if (!req.user)
+    throw new CustomNotAuthorizedError(
+      "You are not authorized",
+      "User authentication is missing",
+      "Try to authenticate correctly and try again",
+      req.originalUrl
+    );
+
+  const posts = await prisma.getFollowingPosts(req.user.id);
 
   return res.json({
     status: "success",

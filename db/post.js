@@ -10,14 +10,59 @@ const prisma = new PrismaClient({ omit: omitConfig });
 
 // post queries
 
-exports.getAllPosts = async () => {
+exports.getAllPosts = async (trendingSort) => {
+  try {
+    let orderByOption;
+
+    if (trendingSort) {
+      orderByOption = {
+        likedBy: {
+          _count: "desc",
+        },
+      };
+    } else {
+      orderByOption = {
+        createdAt: "desc",
+      };
+    }
+
+    return await prisma.post.findMany({
+      orderBy: orderByOption,
+      include: {
+        author: {
+          include: {
+            followedBy: true,
+          },
+        },
+        likedBy: true,
+        comments: true,
+        _count: {
+          select: {
+            likedBy: true,
+            comments: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
+  }
+};
+
+exports.getFollowingPosts = async (userId) => {
   try {
     return await prisma.post.findMany({
-      orderBy: [
-        {
-          createdAt: "desc",
+      where: {
+        author: {
+          followedBy: {
+            some: {
+              id: Number(userId),
+            },
+          },
         },
-      ],
+      },
       include: {
         author: {
           include: {
@@ -86,6 +131,9 @@ exports.getPostById = async (postId) => {
         },
         likedBy: true,
         comments: {
+          orderBy: {
+            createdAt: "desc",
+          },
           include: {
             author: {
               include: {

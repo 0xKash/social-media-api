@@ -12,6 +12,7 @@ const {
   deleteComment,
   getPostsByUsername,
   deletePost,
+  getFollowingPosts,
 } = require("../controllers/postController");
 
 // setup
@@ -19,6 +20,8 @@ const postRouter = Router();
 
 postRouter.get("/", isAuth, getAllPosts);
 postRouter.post("/", isAuth, createPost);
+
+postRouter.get("/following", isAuth, getFollowingPosts);
 
 postRouter.get("/:postId", isAuth, getPostById);
 postRouter.delete("/:postId", isAuth, deletePost);
