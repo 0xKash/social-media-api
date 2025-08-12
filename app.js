@@ -16,12 +16,30 @@ require("./config/passport")(passport);
 // app setup
 const app = express();
 
+const allowedOrigins = [
+  "https://social-media-frontend-seven-umber.vercel.app", // Production
+  "http://localhost:3000", // Development
+];
+
 app.use(
   cors({
-    origin: "https://social-media-frontend-seven-umber.vercel.app",
+    origin: function (origin, callback) {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        /\.vercel\.app$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
+app.options("*", cors());
+
 app.use(express.json());
 app.set(express.urlencoded({ extended: true }));
 app.use(
