@@ -41,7 +41,8 @@ authRouter.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect: "http://localhost:5173/home", // MUST change on production
+    successRedirect:
+      "https://social-media-frontend-nine-mocha.vercel.app//home", // MUST change on production
   })
 );
 
