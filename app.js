@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // development
-      "https://social-media-frontend-nine-mocha.vercel.app/", // production
+      "https://social-media-frontend-nine-mocha.vercel.app", // production
     ],
     credentials: true,
   })
