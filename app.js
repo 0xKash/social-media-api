@@ -30,6 +30,11 @@ app.use(
     secret: "secret",
     saveUninitialized: false,
     resave: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    },
   })
 );
 app.use(passport.session());
