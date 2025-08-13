@@ -41,7 +41,7 @@ authRouter.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect: `${process.env.ORIGIN_URL}/home`,
+    successRedirect: "http://localhost:5173/home", // MUST change on production
   })
 );
 

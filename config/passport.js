@@ -49,6 +49,14 @@ passport.deserializeUser(async (user, done) => {
 
     if (user.nodeId) {
       dbUser = await prisma.getUserByGithubId(user.id);
+
+      if (!dbUser) {
+        dbUser = await prisma.createGithubUser(
+          user.id,
+          user.username,
+          user.photos[0].value
+        );
+      }
     } else {
       dbUser = await prisma.getUserById(user.id);
     }

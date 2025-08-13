@@ -6,8 +6,6 @@ const cors = require("cors");
 const authRouter = require("./routes/authRoutes");
 const passport = require("passport");
 const session = require("express-session");
-const { isAuth } = require("./lib/authMiddleware");
-const { test } = require("./controllers/authController");
 const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRouter");
 
@@ -18,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ORIGIN_URL,
+    origin: "http://localhost:5173", // development
     credentials: true,
   })
 );
