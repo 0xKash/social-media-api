@@ -40,6 +40,8 @@ app.use(
 app.use(passport.session());
 app.use(passport.initialize());
 
+console.log("NODE_ENV:", process.env.NODE_ENV);
+
 // Routers
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
