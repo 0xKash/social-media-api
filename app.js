@@ -6,6 +6,7 @@ const cors = require("cors");
 const authRouter = require("./routes/authRoutes");
 const passport = require("passport");
 const session = require("express-session");
+const MemoryStore = require("memorystore")(session);
 const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRouter");
 
@@ -35,6 +36,9 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
     },
+    store: new MemoryStore({
+      checkPeriod: 86400000,
+    }),
   })
 );
 app.use(passport.session());
