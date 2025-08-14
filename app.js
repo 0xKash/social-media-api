@@ -8,8 +8,9 @@ const passport = require("passport");
 const session = require("express-session");
 const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRouter");
-const pgSession = require("connect-pg-simple");
-const { Pool } = require("pg");
+
+const pg = require("pg");
+const pgSession = require("connect-pg-simple")(session);
 
 require("./config/passport")(passport);
 
@@ -31,7 +32,7 @@ app.set(express.urlencoded({ extended: true }));
 
 app.set("trust proxy", 1); // Trust vercel proxy
 
-const pgPool = new Pool({
+const pgPool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
 });
@@ -43,13 +44,14 @@ app.use(
     resave: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24,
     },
     store: new pgSession({
       pool: pgPool,
-      tableName: "session",
+      tableName: "user_sessions",
+      createTableIfMissing: true,
     }),
   })
 );
