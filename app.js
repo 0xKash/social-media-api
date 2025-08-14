@@ -33,6 +33,7 @@ app.use(
     resave: false,
     cookie: {
       sameSite: "none",
+      secure: true,
     },
     store: new MemoryStore({
       checkPeriod: 86400000,
