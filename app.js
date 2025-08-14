@@ -24,8 +24,10 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.set(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "secret",
@@ -34,6 +36,7 @@ app.use(
     cookie: {
       secure: true,
       sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24,
     },
     store: new MemoryStore({
       checkPeriod: 86400000,
