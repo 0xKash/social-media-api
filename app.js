@@ -28,12 +28,15 @@ app.use(
 app.use(express.json());
 app.set(express.urlencoded({ extended: true }));
 
+app.set("trust proxy", 1); // Trust vercel proxy
+
 app.use(
   session({
     secret: "secret",
     saveUninitialized: false,
     resave: false,
     cookie: {
+      httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24,
