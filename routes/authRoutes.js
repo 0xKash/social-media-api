@@ -21,13 +21,25 @@ authRouter.get("/", isAuth, authUser);
 authRouter.post("/register", registerUser);
 
 // login endpoints
-authRouter.post(
-  "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/auth/login/fail",
-    successRedirect: "/auth/login/success",
-  })
-);
+authRouter.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "Wrong credentials" });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+
+      return res.json({
+        status: "success",
+        data: user,
+      });
+    });
+  })(req, res, next);
+});
 
 authRouter.get("/login/success", isAuth, successLogin);
 authRouter.get("/login/fail", failLogin);
@@ -41,8 +53,7 @@ authRouter.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect:
-      "https://social-media-frontend-nine-mocha.vercel.app//home", // MUST change on production
+    successRedirect: "https://social-media-frontend-nine-mocha.vercel.app/home", // MUST change on production
   })
 );
 

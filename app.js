@@ -32,16 +32,16 @@ app.use(
     saveUninitialized: false,
     resave: false,
     cookie: {
-      sameSite: "none",
       secure: true,
+      sameSite: "none",
     },
     store: new MemoryStore({
       checkPeriod: 86400000,
     }),
   })
 );
-app.use(passport.session());
 app.use(passport.initialize());
+app.use(passport.session());
 
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
