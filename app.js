@@ -31,6 +31,9 @@ app.use(
     secret: "secret",
     saveUninitialized: false,
     resave: false,
+    cookie: {
+      sameSite: "none",
+    },
     store: new MemoryStore({
       checkPeriod: 86400000,
     }),
