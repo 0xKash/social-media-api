@@ -31,11 +31,6 @@ app.use(
     secret: "secret",
     saveUninitialized: false,
     resave: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-    },
     store: new MemoryStore({
       checkPeriod: 86400000,
     }),
