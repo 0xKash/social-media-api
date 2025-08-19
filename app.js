@@ -39,7 +39,7 @@ const pgPool = new pg.Pool({
 
 app.use(
   session({
-    secret: "secret",
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     cookie: {
