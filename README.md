@@ -2,8 +2,6 @@
 
 A RESTful API built with Node.js, Express, and Supabase. It provides secure session-based authentication and cloud storage integration, designed to be the backbone of a modern social media application.
 
-[![Deployment Status](https://vercel.com/button)](https://social-media-api-zeta.vercel.app/)
-
 ---
 
 ## ✨ Features
